@@ -4,7 +4,7 @@ import { mockTodos } from "./data";
 import { Todo } from "./types";
 
 // Load environment variables
-// ok
+// ok 2
 
 dotenv.config();
 
