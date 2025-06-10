@@ -1,5 +1,9 @@
 pipeline {
   agent any
+
+  tools {
+    nodejs 'NodeJS'
+  }
   
   // environment {
   //   NODE_ENV = credentials('node-env') // Secure secret from Jenkins Credentials
