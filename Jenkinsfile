@@ -4,10 +4,7 @@ pipeline {
   tools {
     nodejs 'Node22.12.0'
   }
-  
-  // environment {
-  //   NODE_ENV = credentials('node-env') // Secure secret from Jenkins Credentials
-  // }
+
   
   options {
     timestamps()
