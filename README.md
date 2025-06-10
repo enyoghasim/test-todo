@@ -35,11 +35,13 @@ A simple REST API for managing todos built with Express.js and TypeScript.
 ### Usage
 
 1. Build the project:
+
    ```bash
    npm run build
    ```
 
 2. Start the server:
+
    ```bash
    npm start
    ```
@@ -49,9 +51,11 @@ A simple REST API for managing todos built with Express.js and TypeScript.
 ### API Endpoints
 
 #### GET /todos
+
 Returns a list of 10 sample todos.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -71,9 +75,11 @@ Returns a list of 10 sample todos.
 ```
 
 #### GET /health
+
 Health check endpoint to verify the API is running.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -112,6 +118,7 @@ interface Todo {
 ## Development
 
 For development with hot reload:
+
 ```bash
 npm run dev
 ```

@@ -1,4 +1,4 @@
-import { Todo } from './types';
+import { Todo } from "./types";
 
 export const mockTodos: Todo[] = [
   {
@@ -6,79 +6,79 @@ export const mockTodos: Todo[] = [
     title: "Learn TypeScript",
     description: "Study TypeScript fundamentals and advanced concepts",
     completed: false,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
+    createdAt: new Date("2024-01-01"),
+    updatedAt: new Date("2024-01-01"),
   },
   {
     id: 2,
     title: "Build Todo API",
     description: "Create a REST API for managing todos",
     completed: true,
-    createdAt: new Date('2024-01-02'),
-    updatedAt: new Date('2024-01-03')
+    createdAt: new Date("2024-01-02"),
+    updatedAt: new Date("2024-01-03"),
   },
   {
     id: 3,
     title: "Setup Express Server",
     description: "Configure Express.js with TypeScript",
     completed: true,
-    createdAt: new Date('2024-01-03'),
-    updatedAt: new Date('2024-01-03')
+    createdAt: new Date("2024-01-03"),
+    updatedAt: new Date("2024-01-03"),
   },
   {
     id: 4,
     title: "Write Unit Tests",
     description: "Add comprehensive test coverage",
     completed: false,
-    createdAt: new Date('2024-01-04'),
-    updatedAt: new Date('2024-01-04')
+    createdAt: new Date("2024-01-04"),
+    updatedAt: new Date("2024-01-04"),
   },
   {
     id: 5,
     title: "Deploy Application",
     description: "Deploy the todo app to production",
     completed: false,
-    createdAt: new Date('2024-01-05'),
-    updatedAt: new Date('2024-01-05')
+    createdAt: new Date("2024-01-05"),
+    updatedAt: new Date("2024-01-05"),
   },
   {
     id: 6,
     title: "Add Authentication",
     description: "Implement user authentication and authorization",
     completed: false,
-    createdAt: new Date('2024-01-06'),
-    updatedAt: new Date('2024-01-06')
+    createdAt: new Date("2024-01-06"),
+    updatedAt: new Date("2024-01-06"),
   },
   {
     id: 7,
     title: "Database Integration",
     description: "Connect to a database for persistent storage",
     completed: false,
-    createdAt: new Date('2024-01-07'),
-    updatedAt: new Date('2024-01-07')
+    createdAt: new Date("2024-01-07"),
+    updatedAt: new Date("2024-01-07"),
   },
   {
     id: 8,
     title: "Add Validation",
     description: "Implement input validation for API endpoints",
     completed: false,
-    createdAt: new Date('2024-01-08'),
-    updatedAt: new Date('2024-01-08')
+    createdAt: new Date("2024-01-08"),
+    updatedAt: new Date("2024-01-08"),
   },
   {
     id: 9,
     title: "Error Handling",
     description: "Implement proper error handling and logging",
     completed: false,
-    createdAt: new Date('2024-01-09'),
-    updatedAt: new Date('2024-01-09')
+    createdAt: new Date("2024-01-09"),
+    updatedAt: new Date("2024-01-09"),
   },
   {
     id: 10,
     title: "API Documentation",
     description: "Create comprehensive API documentation",
     completed: false,
-    createdAt: new Date('2024-01-10'),
-    updatedAt: new Date('2024-01-10')
-  }
+    createdAt: new Date("2024-01-10"),
+    updatedAt: new Date("2024-01-10"),
+  },
 ];

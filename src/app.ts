@@ -4,6 +4,8 @@ import { mockTodos } from "./data";
 import { Todo } from "./types";
 
 // Load environment variables
+// ok
+
 dotenv.config();
 
 const app: Application = express();
