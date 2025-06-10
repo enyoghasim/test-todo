@@ -72,32 +72,29 @@ pipeline {
   }
   
   post {
-     success {
+    success {
       echo '🎉 Deployment succeeded!'
       echo "Application is now running on production"
     }
     
     failure {
       echo '❌ Build failed. Attempting rollback...'
-      node {
-        script {
-          try {
-            sh '''
-              echo "Rolling back to previous commit..."
-              git reset --hard HEAD~1
-              npm ci
-              npm run build
-              pm2 delete my-app || true
-              pm2 start npm --name "my-app" -- start
-              echo "Rollback completed"
-            '''
-          } catch (Exception e) {
-            echo "⚠️ Rollback failed: ${e.getMessage()}"
-          }
+      script {
+        try {
+          sh '''
+            echo "Rolling back to previous commit..."
+            git reset --hard HEAD~1
+            npm ci
+            npm run build
+            pm2 delete my-app || true
+            pm2 start npm --name "my-app" -- start
+            echo "Rollback completed"
+          '''
+        } catch (Exception e) {
+          echo "⚠️ Rollback failed: ${e.getMessage()}"
         }
       }
     }
-    
     
     always {
       echo "Build finished at: ${new Date()}"
