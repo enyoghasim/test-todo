@@ -91,18 +91,66 @@ pipeline {
             
             # Show PM2 status
             pm2 list
+            
+            # Wait a moment for app to start up
+            echo "Waiting for application to start..."
+            sleep 5
+            
+            # Show recent logs to verify startup
+            echo "=== Recent Application Logs ==="
+            pm2 logs my-app --lines 20 --nostream || echo "No logs available yet"
+            
+            # Show app info
+            echo "=== Application Information ==="
+            pm2 show my-app || echo "App info not available"
           '''
         }
         
         echo '✅ Application deployed successfully'
       }
     }
+    
+    stage('Post-Deploy Health Check') {
+      steps {
+        echo '🔍 Performing health check...'
+        script {
+          try {
+            sh '''
+              # Give the app a moment to fully start
+              sleep 3
+              
+              # Check if the app is running
+              echo "=== PM2 Process Status ==="
+              pm2 jlist | jq '.[] | select(.name=="my-app") | {name: .name, status: .pm2_env.status, pid: .pid, uptime: .pm2_env.pm_uptime}'
+              
+              # Show recent logs again
+              echo "=== Final Log Check ==="
+              pm2 logs my-app --lines 10 --nostream || echo "No logs available"
+              
+              # Optional: Health check endpoint (if your app has one)
+              # curl -f http://localhost:3000/health || echo "Health check endpoint not available"
+            '''
+          } catch (Exception e) {
+            echo "Health check warning: " + e.getMessage()
+            // Don't fail the build for health check issues
+          }
+        }
+      }
+    }
   }
   
   post {
-        success {
+    success {
       echo '🎉 Deployment succeeded!'
       echo 'Application is now running on production'
+      script {
+        // Show final status
+        sh '''
+          echo "=== Final PM2 Status ==="
+          pm2 list
+          echo "=== Access logs with: pm2 logs my-app ==="
+        '''
+      }
     }
     
     failure {
@@ -118,6 +166,11 @@ pipeline {
               pm2 delete my-app || true
               NODE_ENV=$NODE_ENV pm2 start npm --name "my-app" -- start
               echo "Rollback completed"
+              
+              # Show rollback logs
+              echo "=== Rollback Application Logs ==="
+              sleep 3
+              pm2 logs my-app --lines 10 --nostream || echo "No rollback logs available"
             '''
           }
         } catch (Exception e) {
@@ -130,6 +183,13 @@ pipeline {
       script {
         def buildTime = new Date()
         echo 'Build finished at: ' + buildTime.toString()
+        
+        // Always show final PM2 status for debugging
+        try {
+          sh 'pm2 list || echo "PM2 not available"'
+        } catch (Exception e) {
+          echo "Could not get PM2 status: " + e.getMessage()
+        }
       }
     }
   }
