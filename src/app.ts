@@ -47,7 +47,7 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
-// Start serverel
+// Start serverel4
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
