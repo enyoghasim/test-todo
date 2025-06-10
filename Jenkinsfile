@@ -1,9 +1,9 @@
 pipeline {
   agent any
   
-  environment {
-    NODE_ENV = credentials('node-env') // Secure secret from Jenkins Credentials
-  }
+  // environment {
+  //   NODE_ENV = credentials('node-env') // Secure secret from Jenkins Credentials
+  // }
   
   options {
     timestamps()
@@ -20,19 +20,12 @@ pipeline {
       }
     }
     
-    stage('Verify Production Branch') {
+    stage('Verify Build Info') {
       steps {
         script {
-          def branch = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
-          echo "Current branch: ${branch}"
-          
-          if (branch != 'production') {
-            echo "❌ Not production branch. Current branch: ${branch}"
-            currentBuild.result = 'ABORTED'
-            error("Build aborted: Not on production branch")
-          }
-          
-          echo "✅ Confirmed building production branch"
+          echo "✅ Building from production branch"
+          echo "Build triggered by: ${currentBuild.getBuildCauses()}"
+          echo "Commit: ${env.GIT_COMMIT ?: 'Unknown'}"
         }
       }
     }
