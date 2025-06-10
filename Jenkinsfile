@@ -16,81 +16,92 @@ pipeline {
       steps {
         // Jenkins will automatically checkout the branch that triggered the webhook
         checkout scm
-        echo "Checked out repository successfully"
+        echo 'Checked out repository successfully'
       }
     }
     
     stage('Verify Build Info') {
       steps {
         script {
-          echo "✅ Building from production branch"
-          echo "Build triggered by: ${currentBuild.getBuildCauses()}"
-          echo "Commit: ${env.GIT_COMMIT ?: 'Unknown'}"
+          echo '✅ Building from production branch'
+          echo 'Build triggered by webhook'
+          def commitId = env.GIT_COMMIT ?: 'Unknown'
+          echo "Commit: " + commitId
         }
       }
     }
     
     stage('Install Dependencies') {
       steps {
-        echo "📦 Installing dependencies..."
+        echo '📦 Installing dependencies...'
         sh 'npm ci'
-        echo "✅ Dependencies installed successfully"
+        echo '✅ Dependencies installed successfully'
       }
     }
     
     stage('Build Project') {
       steps {
-        echo "🔨 Building project..."
+        echo '🔨 Building project...'
         sh 'npm run build'
-        echo "✅ Build completed successfully"
+        echo '✅ Build completed successfully'
       }
     }
     
     stage('Deploy with PM2') {
       steps {
-        echo "🚀 Deploying application..."
-        sh '''
-          # Stop existing app (ignore error if not running)
-          pm2 delete my-app || true
-          
-          # Start the application
-          pm2 start npm --name "my-app" -- start
-          
-          # Show PM2 status
-          pm2 list
-        '''
-        echo "✅ Application deployed successfully"
+        echo '🚀 Deploying application...'
+        
+        // Use credentials only when needed
+        withCredentials([string(credentialsId: 'node-env', variable: 'NODE_ENV')]) {
+          sh '''
+            # Stop existing app (ignore error if not running)
+            pm2 delete my-app || true
+            
+            # Start the application with NODE_ENV
+            NODE_ENV=$NODE_ENV pm2 start npm --name "my-app" -- start
+            
+            # Show PM2 status
+            pm2 list
+          '''
+        }
+        
+        echo '✅ Application deployed successfully'
       }
     }
   }
   
   post {
-    success {
+        success {
       echo '🎉 Deployment succeeded!'
-      echo "Application is now running on production"
+      echo 'Application is now running on production'
     }
     
     failure {
       echo '❌ Build failed. Attempting rollback...'
       script {
         try {
-          sh '''
-            echo "Rolling back to previous commit..."
-            git reset --hard HEAD~1
-            npm ci
-            npm run build
-            pm2 delete my-app || true
-            pm2 start npm --name "my-app" -- start
-            echo "Rollback completed"
-          '''
+          withCredentials([string(credentialsId: 'node-env', variable: 'NODE_ENV')]) {
+            sh '''
+              echo "Rolling back to previous commit..."
+              git reset --hard HEAD~1
+              npm ci
+              npm run build
+              pm2 delete my-app || true
+              NODE_ENV=$NODE_ENV pm2 start npm --name "my-app" -- start
+              echo "Rollback completed"
+            '''
+          }
         } catch (Exception e) {
-          echo "⚠️ Rollback failed: ${e.getMessage()}"
+          echo 'Rollback failed: ' + e.getMessage()
         }
       }
     }
     
     always {
-      echo "Build finished at: ${new Date()}"
+      script {
+        def buildTime = new Date()
+        echo 'Build finished at: ' + buildTime.toString()
+      }
     }
   }
 }
