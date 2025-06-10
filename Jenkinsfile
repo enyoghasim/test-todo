@@ -20,6 +20,34 @@ pipeline {
       }
     }
     
+    stage('Verify Environment') {
+      steps {
+        echo '🔍 Verifying Node.js environment...'
+        sh '''
+          echo "Node.js version:"
+          node --version
+          echo "npm version:"
+          npm --version
+          echo "Current PATH:"
+          echo $PATH
+          echo "Node location:"
+          which node
+          echo "npm location:"
+          which npm
+        '''
+        
+        // Install PM2 if not present
+        script {
+          def pm2Status = sh(script: 'which pm2 || echo "not found"', returnStdout: true).trim()
+          if (pm2Status.contains('not found')) {
+            echo '📦 Installing PM2...'
+            sh 'npm install -g pm2'
+          }
+          sh 'pm2 --version'
+        }
+      }
+    }
+    
     stage('Verify Build Info') {
       steps {
         script {
